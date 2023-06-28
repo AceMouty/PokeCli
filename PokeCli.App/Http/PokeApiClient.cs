@@ -13,9 +13,9 @@ public class PokeApiClient
     _cache = cache;
   }
 
-  public async Task<PokeResponse> MakeGet(string url)
+  public async Task<string> MakeGet(string url)
   {
-    PokeResponse serializedResponse;
+    PokeAreaResponse serializedAreaResponse;
     
     // Try cache first
     var responseIsCached = _cache.TryGet(url, out string cachedResult);
@@ -23,8 +23,7 @@ public class PokeApiClient
     {
       Console.WriteLine("Using cached value");
       // silenced_warning:: if we are here, we know we have a cached result
-      serializedResponse = JsonSerializer.Deserialize<PokeResponse>(cachedResult)!;
-      return serializedResponse;
+      return cachedResult;
     }
     
     var response = await _client.GetAsync(url);
@@ -38,10 +37,7 @@ public class PokeApiClient
     var stringResponse = await response.Content.ReadAsStringAsync();
     
     _cache.Add(url, stringResponse);
-    serializedResponse = JsonSerializer.Deserialize<PokeResponse>(stringResponse)!;
-    return serializedResponse;
+    return stringResponse;
   }
 }
 
-public record PokeResponse(string next, string? previous, List<LocationArea> results);
-public record LocationArea(string name, string url);

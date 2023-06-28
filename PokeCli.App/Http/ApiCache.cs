@@ -6,6 +6,7 @@ public interface IApiCache
 {
     public void Add(string key, string jsonString);
     public bool TryGet(string key, out string cachedJson);
+    // TODO: Implement ReapLoop - ReapLoop should clear out the cache after a interval
 }
 
 public class ApiCache : IApiCache
